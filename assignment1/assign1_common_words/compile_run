@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+# Do NOT modify this file
+echo "Compiling"
+hadoop com.sun.tools.javac.Main TopkCommonWords.java
+jar cf cm.jar TopkCommonWords*.class
+echo "Uploading input files"
+hdfs dfs -rm -r commonwords/input
+hdfs dfs -mkdir -p /user/$(whoami)/commonwords/input
+hdfs dfs -put data/* /user/$(whoami)/commonwords/input
+echo "Clear previous output folder"
+hdfs dfs -rm -r commonwords/wc_output commonwords/cm_output
+echo "Submit job"
+hadoop jar cm.jar TopkCommonWords commonwords/input/task1-input1.txt commonwords/input/task1-input2.txt commonwords/input/stopwords.txt commonwords/cm_output/
+echo "Job finished. Print Top 20 words."
+hdfs dfs -cat commonwords/cm_output/part-r-00000
+if [[ "$(hdfs dfs -cat commonwords/cm_output/part-r-00000)" == "$(cat answer.txt)" ]]
+then
+  echo "Test passed."
+else
+  echo "Wrong answer."
+fi

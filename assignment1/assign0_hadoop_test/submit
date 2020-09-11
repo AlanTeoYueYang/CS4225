@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+# Do NOT Modify this file
+
+filename=WordCount.java
+submit_path=/submission/assign0_hadoop_test/
+read -p "Please input your student matriculation number: " id
+read -r -p "Are you sure to submit as '$id'? [y/N] " response
+if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
+then
+  cp ./"$filename" ./"$id"
+  hdfs dfs -put -f ./"$id" $submit_path && echo "You have successfully submitted."
+  rm "$id"
+else
+  echo "Exit"
+fi

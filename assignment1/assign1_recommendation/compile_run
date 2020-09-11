@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+# Do NOT modify this file
+
+echo "Compiling"
+hadoop com.sun.tools.javac.Main src/*.java -d targets/
+cd targets/
+jar cf cf.jar *.class
+echo "Clear everything under 'recommendation/'"
+hdfs dfs -rm -r recommendation
+hdfs dfs -mkdir recommendation
+echo "Uploading input files"
+hdfs dfs -rm -r recommendation/input
+hdfs dfs -mkdir -p recommendation/input
+hdfs dfs -put ../data/* recommendation/input
+echo "Submit job"
+hadoop jar cf.jar Recommend recommendation/input/data.csv recommendation/output
+cd ..
+echo "Job Finished."
+if [[ "$(hdfs dfs -cat recommendation/output/part-r-00000)" == "$(cat answer.txt)" ]]
+then
+  echo "Test passed."
+else
+  echo "Wrong answer."
+fi
+

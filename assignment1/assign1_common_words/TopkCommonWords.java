@@ -1,5 +1,9 @@
+// Matric Number:
+// Name:
+// WordCount.java
 import java.io.IOException;
-import java.io.BufferedReader;
+import java.io.BufferedReader;;
+import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.net.URI;
 import java.util.StringTokenizer;
@@ -34,8 +38,17 @@ public class TopkCommonWords {
         protected void setup(Context context) throws IOException, InterruptedException {
             URI[] cacheFiles = context.getCacheFiles();
             if (cacheFiles != null && cacheFiles.length > 0) {
+                FileSystem fs = FileSystem.get(context.getConfiguration());
                 Path path = new Path(cacheFiles[0].toString());
-                readFile(path);
+                try{
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fs.open(path)));
+                    String stopWord = null;
+                    while((stopWord = bufferedReader.readLine()) != null) {
+                        stopWords.add(stopWord);
+                    }
+                } catch(IOException ex) {
+                    System.err.println("Exception while reading stop words file: " + ex.getMessage());
+                }
             }
         }
 
@@ -205,7 +218,7 @@ public class TopkCommonWords {
         job1.setOutputValueClass(IntWritable.class);
         FileInputFormat.addInputPath(job1, new Path(args[0]));
         FileOutputFormat.setOutputPath(job1, new Path("temp_output1"));
-        job1.addCacheFile(new Path(args[2]).toUri());
+        job1.addCacheFile(new URI(args[2]));
 //        System.exit(job1.waitForCompletion(true) ? 0 : 1);
         job1.waitForCompletion(true);
 

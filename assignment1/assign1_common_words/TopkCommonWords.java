@@ -1,6 +1,3 @@
-// Matric Number:
-// Name:
-// WordCount.java
 import java.io.IOException;
 import java.io.BufferedReader;;
 import java.io.InputStreamReader;
@@ -40,27 +37,15 @@ public class TopkCommonWords {
             if (cacheFiles != null && cacheFiles.length > 0) {
                 FileSystem fs = FileSystem.get(context.getConfiguration());
                 Path path = new Path(cacheFiles[0].toString());
-                try{
+                try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fs.open(path)));
                     String stopWord = null;
-                    while((stopWord = bufferedReader.readLine()) != null) {
+                    while ((stopWord = bufferedReader.readLine()) != null) {
                         stopWords.add(stopWord);
                     }
-                } catch(IOException ex) {
+                } catch (IOException ex) {
                     System.err.println("Exception while reading stop words file: " + ex.getMessage());
                 }
-            }
-        }
-
-        private void readFile(Path filePath) {
-            try{
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
-                String stopWord = null;
-                while((stopWord = bufferedReader.readLine()) != null) {
-                    stopWords.add(stopWord);
-                }
-            } catch(IOException ex) {
-                System.err.println("Exception while reading stop words file: " + ex.getMessage());
             }
         }
 

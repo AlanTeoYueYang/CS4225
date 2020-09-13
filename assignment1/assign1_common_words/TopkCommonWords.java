@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -186,6 +185,18 @@ public class TopkCommonWords {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
+        if (fs.exists(new Path("temp_output1"))){
+            fs.delete(new Path("temp_output1"));
+        }
+
+        if (fs.exists(new Path("temp_output2"))){
+            fs.delete(new Path("temp_output2"));
+        }
+
+        if (fs.exists(new Path("temp_output3"))){
+            fs.delete(new Path("temp_output3"));
+        }
+
         Job job1 = Job.getInstance(conf, "word count 1");
         job1.setMapperClass(TokenizerMapper.class);
         job1.setJarByClass(TopkCommonWords.class);
